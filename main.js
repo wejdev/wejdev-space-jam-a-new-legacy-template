@@ -276,96 +276,102 @@ function updateCardsInGame() {
 // At the end of each quarter, show the coach the average PER
 // for that quarter, allow the coach to make changes to the
 // players on the court again, and add the stats for the next quarter to the game.
+// At the end of each quarter, show the coach the average PER
+// for that quarter, allow the coach to make changes to the
+// players on the court again, and add the stats for the next quarter to the game.
 function endQuarter() {
     // Update the clock display
-
+    document.getElementById('timer').innerText = 'Q '+ (currentQuarter + 1) + ' Time: 0:00';
 
     // Allow the coach to move players again.
-
+    quarterInPlay = false;
 
     // Add the average PER of the quarter to the total count.
-
+    totalAvePER += parseFloat(quarterAvePER.toPrecision(4));
 
     // Add the value to the display counter above the stats column.
-
+    document.getElementById('averagePER').innerText += quarterAvePER + ' + ';
 
     // Progress to the next quarter.
-
+    currentQuarter++;
 
     // Update the stats so that they reflect the next quarter.
-
+    updateCardsInGame();
 
     // Let the coach know that the new PER stats are up to date.
-
+    alert('Q' + (currentQuarter+1) + ' PER stats are in!');
 
     // Encourage the coach to consider new players.
-
+    document.getElementById('quarter').innerText = 'Choose Players for Q'+(currentQuarter+1);
 
     // Update the button text.
-
+    document.getElementById('start').innerText = 'Start Q'+(currentQuarter+1);
 }
 
 // At the end of the game, show the coach the average PER
 // for the entire game and clean up the final view of the app.
 function endGame() {
     // Don't let the coach move players around; the game is over.
-
+    quarterInPlay = true;
 
     // Calculate the average PER for the entire game, including the last quarter.
-
-
+    totalAvePER += parseFloat(quarterAvePER);
+    var averagePER = totalAvePER/numQuarters;
 
     // Let the coach know that the game is over and what the PER was for the game.
-
-
+    alert('Game Over. Game Average PER was: ' + averagePER.toPrecision(4));
+    document.getElementById('averagePER').innerText += quarterAvePER.toPrecision(4) + ' = ' + averagePER.toPrecision(4);
 
     // Clean up the web app view.
-
-
-
-
+    document.getElementById('timer').innerText = 'That\'s All Folks!';
+    document.getElementById('gameButton').innerText = '';
+    document.getElementById('quarter').innerText = '';
+    document.getElementById('currentPER').innerText = '';
 }
 
+
+// This function is called when the Game button is selected. Each time the button is selected,
+// it runs through a 12-second timer (simulating 12 minutes) and then updates the game
+// to the next quarter.
 // This function is called when the Game button is selected. Each time the button is selected,
 // it runs through a 12-second timer (simulating 12 minutes) and then updates the game
 // to the next quarter.
 function startNextQuarter() {
     // If there aren't exactly five players on the court, alert the coach that the game can't start.
-
-
-
-
-
-
+    if(playersOnCourt != maxPlayersOnCourt){
+        alert('Choose exactly ' + maxPlayersOnCourt + ' players to be on the court.');
+        return;
+    }
 
     // Update the button to indicate a quarter is in progress.
-
+    document.getElementById('start').innerText = 'Q' + (currentQuarter + 1) + ' is in progress';
 
     // Define the interval period for the quarter; in this case, it's 12 seconds.
-
+    var secondsInQuarter = 12;
 
     // Set the quarterInPlay variable to true so that the coach
     // can't move players during gameplay
-
+    quarterInPlay = true;
 
     // Update the count down every 1 second, as indicated by the `1000` as
     // the second parameter to the setInterval function
-
+    var x = setInterval(function() {
         // Display the current time on the court board.
-
+        document.getElementById('timer').innerText = 'Q '+ (currentQuarter + 1) + ' Time: ' + secondsInQuarter + ':00';
 
         // Decrement the interval counter for this quarter.
-
+        secondsInQuarter--;
 
         // If the quarter has ended, reset the interval timer and get ready for the next quarter.
-
-
-
-
-
-
-
-
-
-
+        if (secondsInQuarter < 0) {
+            clearInterval(x);
+            if(currentQuarter < 3) {
+                endQuarter();
+            }
+            else {
+                endGame();
+            }
+        }
+    }, 1000);
 }
+
