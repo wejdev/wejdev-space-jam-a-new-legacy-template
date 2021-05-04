@@ -53,41 +53,7 @@ function processPlayers(allPlayerStats) {
     displayPlayerBench();
 }
 
-// Function to add the players to the bench to start the game
-function displayPlayerBench() {
-    // Get the bench div in which the players will be shown.
-    let bench = document.getElementById('#playersOnBench');
 
- // For each player, create a button
-    for (let playerName of playerMap.keys()) {
-        // Create a button for each player
-        var newPlayer = document.createElement('button');
-
-        // Set the ID to the name of the player so we can get it later
-        newPlayer.id = playerName;
-
-        // Identify the style class, which will set the color scheme
-        newPlayer.className = 'playerButton';
-
-        // When the button is clicked, call the movePlayer function
-        newPlayer.onclick = movePlayer;
-
-        // Add the players image to the button
-        var playerImage = document.createElement('img');
-
-        // Set the source (or location) of the image
-        playerImage.src = 'images/'+playerName+'.png';
-
-        // Add the image to the button
-        newPlayer.appendChild(playerImage);
-
-        // Add the button to the bench
-        bench.appendChild(newPlayer);
-    }
-
-    // Display cards for all players
-    displayPlayerCards();
-}
 
 // This function is called at the beginning of the game play to initialize
 // PER for each player, and at each quarter to do two things:
@@ -183,7 +149,7 @@ function displayPlayerBench() {
 // This function is called each time a player button is selected. A player's
 // button being selected indicates that the player either moving to the
 // court or moving to the bench for a water break.
-function movePlayers() {
+function movePlayer() {
     // Don't let the coach change players during a quarter.
     if(quarterInPlay) {
         return;
@@ -374,4 +340,3 @@ function startNextQuarter() {
         }
     }, 1000);
 }
-
