@@ -86,55 +86,95 @@ function displayPlayerBench() {
     }
 
     // Display cards for all players
-
+    displayPlayerCards();
 }
 
 // This function is called at the beginning of the game play to initialize
 // PER for each player, and at each quarter to do two things:
 // 1. Ensure the players currently on the court have the correct PER represented
 // 2. Update the stats for each player for the current quarter
+// This function is called at the beginning of the game play to initialize
+// PER for each player, and at each quarter to do two things:
+// 1. Ensure the players currently on the court have the correct PER represented
+// 2. Update the stats for each player for the current quarter
 function displayPlayerCards() {
     // Get the div in which the stats will be shown.
-
+    var playerCardDisplay = document.getElementById('playerCards');
 
     // For each player, create a player stat card to show the PER for that player for a
     // specific quarter.
-
+    for (let [playerName, playerStats] of playerMap.entries()) {
         // Create an overall div that will contain the player stat information.
-
+        var playerCard = document.createElement('div');
 
         // Set an ID for the card so we can get it later
-
+        playerCard.id = playerName + '_card';
 
         // Set the style class name
-
+        playerCard.className = 'playerCard';
 
         // Add the player image to the div.
-
+        var playerImage = document.createElement('img');
 
         // Set the style for the image
-
+        playerImage.className = 'perCard';
 
         // Load the image
-
+        playerImage.src = 'images/'+playerName+'.png';
 
         // Add the image to the card
-
+        playerCard.appendChild(playerImage);
 
         // Add the player's PER to the div.
-
+        var newPlayerPER = document.createElement('p');
 
         // Set the style for the number
-
+        newPlayerPER.className = 'perCard';
 
         // Set the text for the PER
-
+        newPlayerPER.innerText = 'PER: ' + playerStats[currentQuarter].toPrecision(4);
 
         // Add the PER
-
+        playerCard.appendChild(newPlayerPER);
 
         // Add the player stat card to the game.
+        playerCardDisplay.appendChild(playerCard);
+    }
+}
 
+function displayPlayerBench() {
+    // Get the bench div in which the players will be shown.
+    var bench = document.getElementById('playersOnBench');
+
+    // For each player, create a button.
+    for (let playerName of playerMap.keys()) {
+        // Create a button for each player
+        var newPlayer = document.createElement('button');
+
+        // Set the ID to the name of the player so we can get it later
+        newPlayer.id = playerName;
+
+        // Identify the style class, which will set the color scheme
+        newPlayer.className = 'playerButton';
+
+        // When the button is clicked, call the movePlayer function
+        newPlayer.onclick = movePlayer;
+
+        // Add the players image to the button
+        var playerImage = document.createElement('img');
+
+        // Set the source (or location) of the image
+        playerImage.src = 'images/'+playerName+'.png';
+
+        // Add the image to the button
+        newPlayer.appendChild(playerImage);
+
+        // Add the button to the bench.
+        bench.appendChild(newPlayer);
+    }
+
+    // Display cards for all players
+    displayPlayerCards();
 }
 
 // This function is called each time a player button is clicked. A player
