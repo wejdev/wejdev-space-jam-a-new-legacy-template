@@ -1,100 +1,103 @@
 // A map of playerName to an array of playerPER values
 
 
-// Variables to keep track of constants 
-
-
+// Variables to keep track of constants
+let playerMap = new Map();
+const maxPlayersOnCourt = 5;
+const numQuarters = 4;
 
 // Variables to track state throughout the game
-
-
-
+let currentQuarter = 0;
+let playersOnCourt = 0;
+let quarterInPlay = false;
 
 // Variables to track the PER throughout the game
-
-
-
+let quarterPER = 0;
+let quarterAvePER = 0;
+let totalAvePER = 0;
 
 // Function to read in all of the player stats
 function processPlayers(allPlayerStats) {
     // Split the data by newline into an array.
-
+    let allPlayerStatLines = allPlayerStats.split(/\r\n|\n/);
 
     // Remove the header line (first line)
-
+    allPlayerStatLines.shift();
 
     // Loop through the rows and create a map entry of player name to a list of player PER
-
+ // Loop through the rows and create a map entry of player name to a list of player PER
+    for (var statLine of allPlayerStatLines) {
         // Get all individual stat values
-
-
+        var stats = statLine.split(',');
         // If it's just an empty line, skip it
-
+        if (!stats || stats.length <= 1) continue; // empty line
 
         // The second column has the player name
-
+        var playerName = stats[1];
 
         // Check if player exists in map
-
+        if (!playerMap.has(playerName)) {
             // First time we see the player; Add them in!
-
-
+            playerMap.set(playerName, []);
+        }
 
         // Get per value for player
-
+        var per = parseFloat(stats[9]);
 
         // Add per value to player's array (the next quarter)
-
-
-    // Add the players to the bench.
-
+        playerMap
+            .get(playerName)
+            .push(per);
+    }
+       // Add the players to the bench.
+    displayPlayerBench();
 }
 
 // Function to add the players to the bench to start the game
 function displayPlayerBench() {
     // Get the bench div in which the players will be shown.
+    let bench = document.getElementById('#playersOnBench');
 
-
-    // For each player, create a button 
-
+ // For each player, create a button
+    for (let playerName of playerMap.keys()) {
         // Create a button for each player
-
+        var newPlayer = document.createElement('button');
 
         // Set the ID to the name of the player so we can get it later
-
+        newPlayer.id = playerName;
 
         // Identify the style class, which will set the color scheme
-
+        newPlayer.className = 'playerButton';
 
         // When the button is clicked, call the movePlayer function
-
+        newPlayer.onclick = movePlayer;
 
         // Add the players image to the button
-
+        var playerImage = document.createElement('img');
 
         // Set the source (or location) of the image
-
+        playerImage.src = 'images/'+playerName+'.png';
 
         // Add the image to the button
-
+        newPlayer.appendChild(playerImage);
 
         // Add the button to the bench
-
-
+        bench.appendChild(newPlayer);
+    }
 
     // Display cards for all players
 
 }
 
 // This function is called at the beginning of the game play to initialize
-// PER for each player, and at each quarter to do two things: 
+// PER for each player, and at each quarter to do two things:
 // 1. Ensure the players currently on the court have the correct PER represented
 // 2. Update the stats for each player for the current quarter
 function displayPlayerCards() {
     // Get the div in which the stats will be shown.
 
 
-    // For each player, create a player stat card to show the PER for that player for a 
+    // For each player, create a player stat card to show the PER for that player for a
     // specific quarter.
 
         // Create an overall div that will contain the player stat information.
@@ -189,11 +192,11 @@ function movePlayer() {
 
 }
 
-// At the start of each quarter, do two things: 
+// At the start of each quarter, do two things:
 // 1. Ensure the players currently on the court have the correct PER represented
 // 2. Update the stats for each player for the current quarter.
 function updateCardsInGame() {
-    // For each player, update their player stat card to show PER for that player for 
+    // For each player, update their player stat card to show PER for that player for
     // a specific quarter.
 
 
@@ -248,7 +251,7 @@ function endQuarter() {
     // Update the stats so that they reflect the next quarter.
 
 
-    // Let the coach know that the new PER stats are up to date. 
+    // Let the coach know that the new PER stats are up to date.
 
 
     // Encourage the coach to consider new players.
@@ -292,7 +295,7 @@ function startNextQuarter() {
 
 
     // Update the button to indicate a quarter is in progress.
-    
+
 
     // Define the interval period for the quarter; in this case, it's 12 seconds.
 
@@ -303,7 +306,7 @@ function startNextQuarter() {
 
     // Update the count down every 1 second, as indicated by the `1000` as
     // the second parameter to the setInterval function
-       
+
         // Display the current time on the court board.
 
 
